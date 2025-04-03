@@ -1,64 +1,33 @@
-import Game from "./game.js";
+#-------------------------------------------------------------------------------#
+#               Qodana analysis is configured by qodana.yaml file               #
+#             https://www.jetbrains.com/help/qodana/qodana-yaml.html            #
+#-------------------------------------------------------------------------------#
+version: "1.0"
+#Specify inspection profile for code analysis
+profile:
+  name: qodana.starter
+#Enable inspections
+#include:
+#  - name: <SomeEnabledInspectionId>
+#Disable inspections
+#exclude:
+#  - name: <SomeDisabledInspectionId>
+#    paths:
+#      - <path/where/not/run/inspection>
+#Execute shell command before Qodana execution (Applied in CI/CD pipeline)
+#bootstrap: sh ./prepare-qodana.sh
+#Install IDE plugins before Qodana execution (Applied in CI/CD pipeline)
+#plugins:
+#  - id: <plugin.id> #(plugin id can be found at https://plugins.jetbrains.com)
+#Specify Qodana linter for analysis (Applied in CI/CD pipeline)
+linter: jetbrains/qodana-js:2025.1
 
-let p1, p2;
-while (!p1) {
-  p1 = window.prompt("Who is player 1?");
-}
-
-while (!p2 && p1 !== p2) {
-  p2 = window.prompt(
-    p1 === p2 ? `Please enter a different name than ${p1}.` : "Who is player 2?"
-  );
-}
-
-window.onload = () => {
-  document.getElementById("p1Name").innerText = p1;
-  document.getElementById("p2Name").innerText = p2;
-  let score1 = 0;
-  let score2 = 0;
-
-  (function playGame(p1, p2) {
-    document.getElementById("win").style.display = "none";
-    document.getElementById("turn").style.display = "inline";
-    document.getElementById("p1Score").innerText = score1;
-    document.getElementById("p2Score").innerText = score2;
-
-    const game = new Game(p1, p2);
-    const player = document.getElementById("player");
-    player.innerText = game.player;
-
-    document.querySelectorAll("#tictactoe td").forEach((el) => {
-      el.innerText = "";
-      el.onclick = (evt) => {
-        el.onclick = undefined;
-        evt.target.innerText = game.sym;
-        evt.target.onclick = undefined;
-
-        const [row, col] = evt.target.classList;
-        game.turn(row, col);
-
-        if (game.hasWinner()) {
-          document.getElementById("winner").innerText = game.player;
-          document.getElementById("win").style.display = "inline";
-          document.getElementById("turn").style.display = "none";
-
-          if (game.player === p1) {
-            document.getElementById("p1Score").innerText = ++score1;
-          } else {
-            document.getElementById("p2Score").innerText = ++score2;
-          }
-
-          document.getElementById("newGame").style.display = "inline";
-          document.getElementById("newGame").onclick = () => playGame(p1, p2);
-
-          document.querySelectorAll("td").forEach((el) => {
-            el.onclick = undefined;
-          });
-        } else {
-          game.nextPlayer();
-          player.innerText = game.player;
-        }
-      };
-    });
-  })(p1, p2);
-};
+# The following exclude section was removed as it was preventing Qodana
+# from analyzing the main source code files by excluding 'All' inspections
+# for the src directory and handler.js.
+# exclude:
+#   - name: All
+#     paths:
+#       - src
+#       - src/index.js
+#       - handler.js
